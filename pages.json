@@ -1,0 +1,36 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationStyle":"custom"
+			}
+		}
+	    ,{
+            "path" : "pages/info-frawer/info-frawer",
+            "style" : {}
+        }
+        ,{
+            "path" : "components/avatar/avatar",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/bill-add/bill-add",
+            "style" : {
+				"navigationBarTitleText": "记账"
+			}
+        }
+        ,{
+            "path" : "pages/bill-list/bill-list",
+            "style" : {
+				"navigationBarTitleText": "账单"
+			}
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	}
+}
