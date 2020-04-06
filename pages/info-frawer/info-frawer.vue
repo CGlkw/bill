@@ -1,15 +1,17 @@
 <template>
-	<view>
+	<view >
 		<uni-drawer :visible="vis" @close="callBack">
-			<view style="padding:30rpx;">
-				<avatar :size='100'/>
+			<view class="main">
+				<view style="padding:30rpx;">
+					<avatar :size='50'/>
+				</view>
+				<uni-list>
+					<uni-list-item title="首页" :show-arrow="true" @click="vis=false"></uni-list-item>
+					<uni-list-item title="记账" :show-arrow="true" @click="to('/pages/bill-add/bill-add')"></uni-list-item>
+					<uni-list-item title="账单" :show-arrow="true" @click="to('/pages/bill-list/bill-list')"></uni-list-item>
+					
+				</uni-list>
 			</view>
-			<uni-list>
-				<uni-list-item title="首页" :show-arrow="true" @click="vis=false"></uni-list-item>
-				<uni-list-item title="记账" :show-arrow="true" @click="to('/pages/bill-add/bill-add')"></uni-list-item>
-				<uni-list-item title="账单" :show-arrow="true" @click="to('/pages/bill-list/bill-list')"></uni-list-item>
-				
-			</uni-list>
 		</uni-drawer>
 	</view>
 </template>
@@ -53,7 +55,7 @@
 				uni.navigateTo({
 					url:url,
 					animationType: 'slide-in-right',
-					animationDuration: 1000
+					animationDuration: 300
 				})
 			}
 		}
@@ -61,5 +63,7 @@
 </script>
 
 <style lang="scss">
-
+.main{
+	padding-top:var(--status-bar-height);
+}
 </style>

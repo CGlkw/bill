@@ -1,6 +1,6 @@
 <template>
 	<view class="avatar" >
-		<image :src="src" :style="{width:size + 'rpx',height:size + 'rpx'}"></image>
+		<image :src="src" :style="{width:size + 'px',height:size + 'px'}"></image>
 	</view>
 </template>
 
@@ -9,7 +9,7 @@
 		props:{
 			size:{
 				type:Number,
-				default:80
+				default:30
 			},
 			src:{
 				type:String,

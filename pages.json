@@ -26,6 +26,10 @@
 				"navigationBarTitleText": "账单"
 			}
         }
+        ,{
+            "path" : "pages/main/main",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
