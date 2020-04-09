@@ -26,6 +26,10 @@
             "path" : "pages/main/main",
             "style" : {}
         }
+        ,{
+            "path" : "pages/main/bill-main/bill-main",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

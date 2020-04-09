@@ -5,9 +5,9 @@
 			</tab>
 		</view>
 		
-		<swiper :current="categoryCur" :duration="duration" @animationfinish="animationFinish" @transition = "transition">
-			<swiper-item>
-				111111
+		<swiper style="height: 1000px;" :current="categoryCur" :duration="duration" @animationfinish="animationFinish" @transition = "transition">
+			<swiper-item >
+				<bill-main></bill-main>
 			</swiper-item>
 			<swiper-item>
 				22222
@@ -22,11 +22,12 @@
 
 <script >
 	import tab from '@/components/tab/index.vue';
-
+	import billMain from './bill-main/bill-main.vue'
 	
 	export default {
 		components:{
-			tab
+			tab,
+			billMain
 		},
 		data() {
 			return {
@@ -64,5 +65,7 @@
 </script>
 
 <style>
-
+.item{
+	height: 500px;
+}
 </style>
