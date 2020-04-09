@@ -1,23 +1,33 @@
 <template>
 	<view >
-		<uni-drawer :visible="vis" @close="callBack">
-			<view class="main">
+		<view class="cu-modal drawer-modal justify-start" :class="vis ?'show':''" @tap="hideModal">
+			<view class="cu-dialog basis-lg" @tap.stop="" :style="{paddingTop:StatusBar + 'px'}">
 				<view style="padding:30rpx;">
-					<avatar :size='50'/>
+					<avatar :size='120'/>
 				</view>
-				<uni-list>
-					<uni-list-item title="首页" :show-arrow="true" @click="vis=false"></uni-list-item>
-					<uni-list-item title="记账" :show-arrow="true" @click="to('/pages/bill-add/bill-add')"></uni-list-item>
-					<uni-list-item title="账单" :show-arrow="true" @click="to('/pages/bill-list/bill-list')"></uni-list-item>
-					
-				</uni-list>
+				<view class="cu-list menu sm-border">
+					<view class="cu-item arrow" @tap="hideModal">
+						<view class="content">
+							<text class="text-grey">首页</text>
+						</view>
+					</view>
+					<view class="cu-item arrow" @tap="to('/pages/bill-add/bill-add')">
+						<view class="content">
+							<text class="text-grey">记账</text>
+						</view>
+					</view>
+					<view class="cu-item arrow" @tap="to('/pages/bill-list/bill-list')">
+						<view class="content">
+							<text class="text-grey">账单</text>
+						</view>
+					</view>
+				</view>
 			</view>
-		</uni-drawer>
+		</view>
 	</view>
 </template>
 
 <script>
-	import uniDrawer from '@dcloudio/uni-ui/lib/uni-drawer/uni-drawer.vue'
 	import avatar from 'components/avatar/avatar.vue'
 	import uniList from "@dcloudio/uni-ui/lib/uni-list/uni-list.vue"
 	import uniListItem from "@dcloudio/uni-ui/lib/uni-list-item/uni-list-item.vue"
@@ -34,7 +44,6 @@
 			}
 		},
 		components:{
-			uniDrawer,
 			avatar,
 			uniList,
 			uniListItem
@@ -50,8 +59,13 @@
 			};
 		},
 		methods:{
+			hideModal(e) {
+				this.vis = false
+				this.callBack()
+			},
 			to(url){
 				this.vis = false
+				this.callBack()
 				uni.navigateTo({
 					url:url,
 					animationType: 'slide-in-right',

@@ -1,5 +1,5 @@
 <template>
-	<scroll-view class="scroll-view" :style="'height: ' + size + 'rpx;'" :scroll-x="scrolling" :scroll-with-animation="scrolling"
+	<scroll-view :class="['scroll-view', backgroundColorClass]" :style="'height: ' + size + 'rpx;'" :scroll-x="scrolling" :scroll-with-animation="scrolling"
 	 :scroll-left="scrollLeft">
 		<view class="tabs-wrap">
 			<view :class="'tabs ' + (scroll ? 'tabs--scroll' : '')" :style="'height: ' + size + 'rpx'">
@@ -67,6 +67,10 @@
 			changeDx: {
 				type: Number,
 				default: 0
+			},
+			backgroundColorClass :{
+				type: String,
+				default: ""
 			}
 		},
 		watch: {
@@ -75,8 +79,7 @@
 				deep: true
 			},
 			tabCurIndex: "tabCurChange",
-			size: "sizeChange",
-			changeDx : "changeDxF"
+			size: "sizeChange"
 		},
 
 		mounted() {
@@ -205,7 +208,7 @@
 			}
 		}
 	};
-</script>
-<style>
-	@import "./index.css";
+</script> 
+<style lang="scss"> 
+	@import "./index.scss"; 
 </style>

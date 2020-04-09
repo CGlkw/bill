@@ -1,4 +1,4 @@
-@import "../../assets/css/variables";
+@import "@/assets/css/variables.scss";
 
 $top-height: 90rpx;
 
@@ -44,7 +44,9 @@ $top-height: 90rpx;
 		transition: color 0.3s ease-in-out;
 
 		&--cur {
-			color: $black1;
+			color: $theme-color;
+			font-weight: bold;
+			transition: font-weight 0.3s
 		}
 	}
 
@@ -57,11 +59,11 @@ $top-height: 90rpx;
 		left: 0;
 		bottom: 0;
 		background-color: $theme-color;
-		height: 4rpx;
+		height: 8rpx;
 		width: 0rpx;
 		display: inline-block;
 		&.transition {
-			transition: width 0.3s, transform 0.3s;
+			transition: transform 0.3s;
 		}
 	}
 }

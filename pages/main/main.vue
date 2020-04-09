@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="top-wrap">
-			<tab id="category" :tab-data="categoryMenu" :tab-cur-index="tableIndex" :size="80" :scroll="true" @change="toggleCategory" :changeDx="changeDx">
+			<tab ref="tabs" id="category" :tab-data="categoryMenu" :tab-cur-index="tableIndex" :size="80" :scroll="true" @change="toggleCategory">
 			</tab>
 		</view>
 		
@@ -20,7 +20,7 @@
 	</view>
 </template>
 
-<script>
+<script >
 	import tab from '@/components/tab/index.vue';
 
 	
@@ -33,7 +33,7 @@
 				categoryCur: 0,
 				tableIndex: 0,
 				duration: 300,
-				categoryMenu:['本周','本月','年度'],
+				categoryMenu:['本周','本月','年度总计'],
 				changeDx:0
 			}
 		},
@@ -57,7 +57,7 @@
 				}, 0);
 			},
 			transition(e) {
-				this.changeDx = e.detail.dx
+				this.$refs.tabs.scrollByDx(e.detail.dx)
 			}
 		}
 	}

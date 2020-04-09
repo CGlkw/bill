@@ -1,25 +1,34 @@
 <template>
 	<view>
-		<view class="status-bar"></view>
+		
+		<info-frawer :drawerVisible="drawerVisible" :callBack="onInfoDrawerClose"></info-frawer>
 		<view>
-			<info-frawer :drawerVisible="drawerVisible" :callBack="onInfoDrawerClose"></info-frawer>
-			<uni-nav-bar @clickLeft="drawerVisible = true" background-color="#f8f8f8" :shadow = 'false'>
-				<view class="title">BILL</view>
-				<view slot="left">
-					<avatar></avatar>
+			<view class="cu-bar bg-gradual-blue search" :style="[{height:CustomBar + 'px',paddingTop:StatusBar + 'px'}]">
+				<view >
+					<view @tap="drawerVisible = true">
+						<uni-icons class="info-list" type="list" size="30" color="#d3d3d3"></uni-icons>
+						<view class="cu-avatar round info-avatar" :style="{backgroundImage : 'url('+ avatarImg +')'}" >
+							
+						</view>
+					</view>
+					
+					<view class="content" :style="{top:StatusBar + 'px'}">
+						账单
+					</view>
 				</view>
-				<view slot="right">right</view>
-			</uni-nav-bar>
-			<view>
-				<mainView></mainView>
 			</view>
-			<uni-fab
-				:pattern="pattern"
-				horizontal="right"
-				:popMenu = 'false'
-				@fabClick="addBill"
-			></uni-fab>
 		</view>
+		
+		<view>
+			<mainView></mainView>
+		</view>
+		<uni-fab
+			:pattern="pattern"
+			horizontal="right"
+			:popMenu = 'false'
+			@fabClick="addBill"
+		></uni-fab>
+		
 	</view>
 </template>
 
@@ -29,14 +38,16 @@
 	import avatar from '@/components/avatar/avatar.vue'
 	import mainView from '../main/main.vue'
 	import uniFab from '@/components/uni-fab/uni-fab.vue';
-	
+	import uniIcons from "@dcloudio/uni-ui/lib/uni-icons/uni-icons.vue"
+
 	export default {
 		components:{
 			infoFrawer,
 			uniNavBar,
 			avatar,
 			mainView,
-			uniFab
+			uniFab,
+			uniIcons
 		},
 		data() {
 			return {
@@ -46,7 +57,8 @@
 					selectedColor:'#007AFF',
 					backgroundColor: '#ffffff',
 					buttonColor: '#007AFF'
-				}
+				},
+				avatarImg: '/static/default_avatar.png'
 			}
 		},
 		onLoad() {
@@ -79,5 +91,11 @@
 	.title{
 		margin: 0 auto;
 	}
-
+	.info-list{
+		position: absolute;
+		left: -18px;
+	}
+	.info-avatar{
+		margin-left: 20px;
+	}
 </style>

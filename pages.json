@@ -11,19 +11,15 @@
             "style" : {}
         }
         ,{
-            "path" : "components/avatar/avatar",
-            "style" : {}
-        }
-        ,{
             "path" : "pages/bill-add/bill-add",
             "style" : {
-				"navigationBarTitleText": "记账"
+				"navigationStyle":"custom"
 			}
         }
         ,{
             "path" : "pages/bill-list/bill-list",
             "style" : {
-				"navigationBarTitleText": "账单"
+				"navigationStyle":"custom"
 			}
         }
         ,{
