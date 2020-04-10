@@ -1,12 +1,16 @@
 <template>
-	<view>
-		<k-echarts :eid="eid" :option="option" ></k-echarts>
-		
+	<view class="content">
+		<!-- #ifdef APP-PLUS || H5 -->
+		<view @click="echarts.onClick" :prop="option" :change:prop="echarts.updateEcharts.bind(this)" :id="eid" class="echarts"></view>
+		<button @click="changeOption">更新数据</button>
+		<!-- #endif -->
+		<!-- #ifndef APP-PLUS || H5 -->
+		<view>非 APP、H5 环境不支持</view>
+		<!-- #endif -->
 	</view>
 </template>
 
 <script>
-	import kEcharts from '@/components/k-echarts/index.vue'
 	import { getBillChartDate } from '@/api/bill.js'
 	import moment from 'moment'
 	
@@ -21,12 +25,11 @@
 				default:'week'
 			}
 		},
-		components: {
-			kEcharts
-		},
 		data() {
 			return {
-				option:{
+				days: 7,
+				ieacharts: undefined,
+				option: {
 					title: {
 						text: '消费',
 						left: 'center'
@@ -42,15 +45,15 @@
 					},
 					series: [
 						{
+							name: '访问来源',
 							label: {
 								formatter: '{b} \n{c}',
 							},
-							name: '访问来源',
 							type: 'pie',
 							radius: '55%',
 							center: ['50%', '60%'],
 							data: [
-								
+							
 							],
 							emphasis: {
 								itemStyle: {
@@ -60,36 +63,36 @@
 								}
 							}
 						}
-					],
+					]
 				}
 			}
 		},
-		created() {
+		onLoad() {
 			this.init()
-			
+		},
+		created() {
+			switch(this.type){
+				case 'week':
+					this.days = 7
+					break;
+				case 'month':
+					this.days = 30
+					break;
+				case 'year':
+					this.days = 365
+					break;
+			}
+			this.init()
 		},
 		methods: {
 			changeOption() {
-				const data = this.option.series[0].data
-				// 随机更新示例数据
-				data.forEach((item, index) => {
-					data.splice(index, 1, {value:Math.random() * 40, name:''})
-				})
+				this.days++ 
+				this.init()
 			},
+			
 			init(){
-				let days = 7;
-				switch(this.type){
-					case 'week':
-						days = 7
-						break;
-					case 'month':
-						days = 30
-						break;
-					case 'year':
-						days = 365
-						break;
-				}
-				let startTime = moment().subtract(days, 'days').format("YYYY-MM-DD")
+				
+				let startTime = moment().subtract(this.days, 'days').format("YYYY-MM-DD")
 				let endTime = moment(new Date()).format("YYYY-MM-DD")
 				getBillChartDate({startTime:startTime, endTime: endTime}).then(data =>{
 					this.optionData(data)
@@ -110,7 +113,7 @@
 						seriesData[type] = parseFloat((seriesData[type] + parseFloat(v.money)).toFixed(2))
 					}
 				})
-
+			
 				this.option.legend.data = legendData
 				this.option.series[0].data = []
 			
@@ -129,7 +132,47 @@
 	}
 </script>
 
-
+<script module="echarts" lang="renderjs">
+	let ieacharts ={
+		
+	}
+	
+	
+	export default {
+		mounted() {
+			if (typeof window.echarts === 'function') {
+				this.initEcharts()
+			} else {
+				// 动态引入较大类库避免影响页面展示
+				const script = document.createElement('script')
+				// view 层的页面运行在 www 根目录，其相对路径相对于 www 计算
+				script.src = 'static/echarts.js'
+				script.onload = this.initEcharts.bind(this)
+				document.head.appendChild(script)
+			}
+		},
+		methods: {
+			initEcharts() {
+				ieacharts[this.eid] = echarts.init(document.getElementById(this.eid))
+				// 观测更新的数据在 view 层可以直接访问到
+				ieacharts[this.eid].setOption(this.option)
+			},
+			updateEcharts(newValue, oldValue, ownerInstance, instance) {
+				// 监听 service 层数据变更
+				if(ieacharts[this.eid] !== undefined){
+					ieacharts[this.eid].setOption(newValue)
+					
+				}
+			},
+			onClick(event, ownerInstance) {
+				// 调用 service 层的方法
+				ownerInstance.callMethod('onViewClick', {
+					test: 'test'
+				})
+			}
+		}
+	}
+</script>
 
 <style>
 	.content {
