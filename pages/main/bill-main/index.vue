@@ -82,7 +82,7 @@
 					this.days = 365
 					break;
 			}
-			this.init()
+			this.init() 
 		},
 		methods: {
 			changeOption() {
@@ -156,6 +156,7 @@
 				ieacharts[this.eid] = echarts.init(document.getElementById(this.eid))
 				// 观测更新的数据在 view 层可以直接访问到
 				ieacharts[this.eid].setOption(this.option)
+		
 			},
 			updateEcharts(newValue, oldValue, ownerInstance, instance) {
 				// 监听 service 层数据变更

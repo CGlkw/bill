@@ -1,6 +1,7 @@
 <template>
 	<view>
-		<k-echarts :eid="eid" :option="option" ></k-echarts>
+		<k-echarts :option="option" ></k-echarts>
+		<button @click="changeOption">更新数据</button>
 		
 	</view>
 </template>
@@ -12,10 +13,6 @@
 	
 	export default {
 		props:{
-			eid:{
-				type:String,
-				default:'echarts'
-			},
 			type: {
 				type: String,   //  week month  year
 				default:'week'
@@ -65,31 +62,28 @@
 			}
 		},
 		created() {
-			this.init()
+			switch(this.type){
+				case 'week':
+					this.days = 7
+					break;
+				case 'month':
+					this.days = 30
+					break;
+				case 'year':
+					this.days = 365
+					break;
+			}
+			this.init() 
 			
 		},
 		methods: {
 			changeOption() {
-				const data = this.option.series[0].data
-				// 随机更新示例数据
-				data.forEach((item, index) => {
-					data.splice(index, 1, {value:Math.random() * 40, name:''})
-				})
+				this.days++
+				this.init()
 			},
 			init(){
-				let days = 7;
-				switch(this.type){
-					case 'week':
-						days = 7
-						break;
-					case 'month':
-						days = 30
-						break;
-					case 'year':
-						days = 365
-						break;
-				}
-				let startTime = moment().subtract(days, 'days').format("YYYY-MM-DD")
+				
+				let startTime = moment().subtract(this.days, 'days').format("YYYY-MM-DD")
 				let endTime = moment(new Date()).format("YYYY-MM-DD")
 				getBillChartDate({startTime:startTime, endTime: endTime}).then(data =>{
 					this.optionData(data)

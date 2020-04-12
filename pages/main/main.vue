@@ -8,17 +8,17 @@
 		<swiper :style="{height:clientHeight +'px'}" :current="categoryCur" :duration="duration" @animationfinish="animationFinish" @transition = "transition">
 			<swiper-item >
 				<scroll-view :style="{height:clientHeight +'px'}" :scroll-y="true">
-					<bill-main eid="test2" type="week"></bill-main>
+					<bill-main type="week"></bill-main>
 				</scroll-view>				
 			</swiper-item>
 			<swiper-item>
 				<scroll-view :style="{height:clientHeight +'px'}" :scroll-y="true">
-					<bill-main eid="test211" type="month"></bill-main>
+					<bill-main type="month"></bill-main>
 				</scroll-view>
 			</swiper-item>
 			<swiper-item>
 				<scroll-view :style="{height:clientHeight +'px'}" :scroll-y="true">
-					<bill-main eid="test3" type="year"></bill-main>
+					<bill-main type="year"></bill-main>
 				</scroll-view>
 			</swiper-item>
 			
@@ -28,7 +28,7 @@
 
 <script >
 	import tab from '@/components/tab/index.vue';
-	import billMain from './bill-main/index.vue'
+	import billMain from './bill-main/bill-main.vue'
 	
 	export default {
 		components:{

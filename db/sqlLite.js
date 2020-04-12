@@ -1,6 +1,8 @@
 const db_path = '_doc/bill.db'
 const db_name = 'bill_dev'
 
+const bill_table = 'create table if not exists bill(id int primary key not null,name text,pwd text)'
+
 // 打开数据库
 function openDB(){
 	return new Promise((reslove,reject) => {
