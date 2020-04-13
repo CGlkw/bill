@@ -1,10 +1,9 @@
 const db_path = '_doc/bill.db'
 const db_name = 'bill_dev'
 
-const bill_table = 'create table if not exists bill(id int primary key not null,name text,pwd text)'
 
 // 打开数据库
-function openDB(){
+export function openDB(){
 	return new Promise((reslove,reject) => {
 		plus.sqlite.openDatabase({
 			name: db_name,
@@ -22,10 +21,10 @@ function openDB(){
 }
 
 // 关闭数据库
-function closeDB(){
+export function closeDB(){
 	return new Promise((reslove,reject) => {
 		plus.sqlite.closeDatabase({
-			name: 'first',
+			name: db_name,
 			success: function(e){
 				console.log('closeDatabase success!');
 				reslove(e)

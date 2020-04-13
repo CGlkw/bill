@@ -10,7 +10,6 @@
 </template>
 
 <script>
-	import { createHash } from '@/util/HashUtil.js'
 	
 	export default {
 		props:{
@@ -46,18 +45,18 @@
 				this.initEcharts()
 			} else {
 				// 动态引入较大类库避免影响页面展示
-				const script = document.createElement('script')
-				// view 层的页面运行在 www 根目录，其相对路径相对于 www 计算
-				script.src = 'static/echarts.js'
 				this.eid = createHash(8);
 				
 				let chartsNode = this.$el.getElementsByClassName("echarts");
 				chartsNode[0].id =  this.eid 
-		
 				
+				const script = document.createElement('script')
+				// view 层的页面运行在 www 根目录，其相对路径相对于 www 计算
+				script.src = 'static/echarts.js'
+				script.id = '__echartsId'
 				script.onload = this.initEcharts.bind(this)
 				document.head.appendChild(script)
-				
+
 			}
 		},
 		methods: {

@@ -12,7 +12,9 @@
 					
 						<picker mode="date" fields="month" :value="key" >
 							<button class="cu-btn sm round line-gray" >
-							{{ key }}
+								<view class="picker" >
+									{{ key }}
+								</view>
 							<text class="cuIcon-unfold"></text>
 							</button>
 						</picker>

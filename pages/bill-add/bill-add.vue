@@ -7,7 +7,7 @@
 		<form @submit="formSubmit" @reset="formReset">
 			<view class="cu-form-group">
 				<view class="title">日期</view>
-				<picker v-model="date" mode="date" :value="date" @change="show()">
+				<picker v-model="date" mode="date" :value="date" @change="show">
 					<view class="picker" >
 						{{date}}
 					</view>
@@ -16,15 +16,15 @@
 			<!-- #ifndef MP-ALIPAY -->
 			<view class="cu-form-group">
 				<view class="title">类型</view>
-				<picker mode="multiSelector" @change="MultiChange" @columnchange="MultiColumnChange" :value="multiIndex" :range="multiArray">
+				<picker mode="selector" @change="MultiChange"  :value="0" :range="typeArray">
 					<view class="picker">
-						{{multiArray[0][multiIndex[0]]}}，{{multiArray[1][multiIndex[1]]}}，{{multiArray[2][multiIndex[2]]}}
+						{{ type }}
 					</view>
 				</picker>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">金额</view>
-				<input placeholder="金额" type="number" name="input"></input>
+				<input placeholder="金额" type="number" :value="money" @input="ehangeMoney"></input>
 			</view>
 			<!-- #endif -->
 			
@@ -35,149 +35,88 @@
 				
 				<textarea maxlength="-1"  @input="textareaAInput" v-model="textareaAValue" placeholder="多行文本输入框"></textarea>
 			</view>
-			
+			<view class="uni-btn-v">
+				<button form-type="submit" class="cu-btn bg-blue margin-tb-sm lg">Submit</button>
+				<button type="default" form-type="reset">Reset</button>
+			</view>
 		</form>
+		
+		<view class="cu-modal" :class="modal?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">Modal标题</view>
+					<view class="action" @tap="modal = false">
+						<text class="cuIcon-close text-red"></text>
+					</view>
+				</view>
+				<view class="padding-xl">
+					{{ modalContext }}
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
 	import moment from 'moment'
+	import { getBillType, getBill } from '@/api/bill.js'
+	import { insertBillTable, selectAllBillTable } from '@/db/bill_table.js'
 	
 	export default {
 		data() {
 			return {
 				index: -1,
-				multiArray: [
-					['无脊柱动物', '脊柱动物'],
-					['扁性动物', '线形动物', '环节动物', '软体动物', '节肢动物'],
-					['猪肉绦虫', '吸血虫']
-				],
+				type:'',
+				typeArray: [],
 				date: moment(new Date()).format('YYYY-MM-DD'),
-				objectMultiArray: [
-					[{
-							id: 0,
-							name: '无脊柱动物'
-						},
-						{
-							id: 1,
-							name: '脊柱动物'
-						}
-					],
-					[{
-							id: 0,
-							name: '扁性动物'
-						},
-						{
-							id: 1,
-							name: '线形动物'
-						},
-						{
-							id: 2,
-							name: '环节动物'
-						},
-						{
-							id: 3,
-							name: '软体动物'
-						},
-						{
-							id: 3,
-							name: '节肢动物'
-						}
-					],
-					[{
-							id: 0,
-							name: '猪肉绦虫'
-						},
-						{
-							id: 1,
-							name: '吸血虫'
-						}
-					]
-				],
-				multiIndex: [0, 0, 0],
-				textareaAValue: ''
+				objectMultiArray: [],
+				textareaAValue: '',
+				money: undefined,
+				modal:false,
+				modalContext:'',
+				
 			};
 		},
+		created() {
+			this.initTypePiker()
+		},
 		methods: {
+			initTypePiker(){
+				getBillType().then(data => {
+					data.forEach((v, i) => {
+						this.typeArray.push(v.name)
+					})
+					this.type = data[0].name
+				})
+				console.log(this.typeArray)
+			},
 			formSubmit: function(e) {
-				console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
-				var formdata = e.detail.value
-				uni.showModal({
-					content: '表单数据内容：' + JSON.stringify(formdata),
-					showCancel: false
-				});
+				console.log({type:this.type, remark:this.textareaAValue, time:this.date, money:this.money})
+				
+				insertBillTable({type:this.type, remark:this.textareaAValue, time:this.date, money:this.money}).then(() =>{
+					selectAllBillTable().then(data => {
+						this.modal = true
+						this.modalContext = JSON.stringify(data)
+					})
+				})
 			},
 			formReset: function(e) {
 				console.log('清空数据')
 			},
-			MultiColumnChange(e) {
-				let data = {
-					multiArray: this.multiArray,
-					multiIndex: this.multiIndex
-				};
-				data.multiIndex[e.detail.column] = e.detail.value;
-				switch (e.detail.column) {
-					case 0:
-						switch (data.multiIndex[0]) {
-							case 0:
-								data.multiArray[1] = ['扁性动物', '线形动物', '环节动物', '软体动物', '节肢动物'];
-								data.multiArray[2] = ['猪肉绦虫', '吸血虫'];
-								break;
-							case 1:
-								data.multiArray[1] = ['鱼', '两栖动物', '爬行动物'];
-								data.multiArray[2] = ['鲫鱼', '带鱼'];
-								break;
-						}
-						data.multiIndex[1] = 0;
-						data.multiIndex[2] = 0;
-						break;
-					case 1:
-						switch (data.multiIndex[0]) {
-							case 0:
-								switch (data.multiIndex[1]) {
-									case 0:
-										data.multiArray[2] = ['猪肉绦虫', '吸血虫'];
-										break;
-									case 1:
-										data.multiArray[2] = ['蛔虫'];
-										break;
-									case 2:
-										data.multiArray[2] = ['蚂蚁', '蚂蟥'];
-										break;
-									case 3:
-										data.multiArray[2] = ['河蚌', '蜗牛', '蛞蝓'];
-										break;
-									case 4:
-										data.multiArray[2] = ['昆虫', '甲壳动物', '蛛形动物', '多足动物'];
-										break;
-								}
-								break;
-							case 1:
-								switch (data.multiIndex[1]) {
-									case 0:
-										data.multiArray[2] = ['鲫鱼', '带鱼'];
-										break;
-									case 1:
-										data.multiArray[2] = ['青蛙', '娃娃鱼'];
-										break;
-									case 2:
-										data.multiArray[2] = ['蜥蜴', '龟', '壁虎'];
-										break;
-								}
-								break;
-						}
-						data.multiIndex[2] = 0;
-						break;
-				}
-				this.multiArray = data.multiArray;
-				this.multiIndex = data.multiIndex;
+			MultiChange(e) {
+				this.type = this.typeArray[e.detail.value]
 			},
 			
 			textareaAInput(e) {
 				this.textareaAValue = e.detail.value
 			},
-			show(){
+			show(e){
+				this.date = e.detail.value
+				
 				console.log(this.date)
+			},
+			ehangeMoney(e){
+				this.money = e.detail.value
 			}
 		}
 	}

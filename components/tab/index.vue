@@ -1,6 +1,6 @@
 <template>
-	<scroll-view :class="['scroll-view', backgroundColorClass]" :style="'height: ' + size + 'rpx;'" :scroll-x="scrolling" :scroll-with-animation="scrolling"
-	 :scroll-left="scrollLeft">
+	<scroll-view :class="['scroll-view', backgroundColorClass]" :style="'height: ' + size + 'rpx;'" :scroll-x="scrolling"
+	 :scroll-with-animation="scrolling" :scroll-left="scrollLeft">
 		<view class="tabs-wrap">
 			<view :class="'tabs ' + (scroll ? 'tabs--scroll' : '')" :style="'height: ' + size + 'rpx'">
 				<view :class="'tabs__item ' + (index === tabCur ? 'tabs__item--cur': '')" :style="'height: ' + size + 'rpx;line-height: ' + size + 'rpx'"
@@ -17,8 +17,7 @@
 	export default {
 		data() {
 			return {
-				/* 未渲染数据 */
-				windowWidth: 0,
+
 				// 屏幕宽度
 				tabItems: [],
 				// 所有 tab 节点信息
@@ -33,7 +32,14 @@
 				lineWidth: 0,
 				// 下划 line 宽度
 				scrollLeft: 0, // scroll-view 左边滚动距离
-				tabCur: 0
+				tabCur: 0,
+
+				//滑动过程中上次的节点时间
+				lastTime: undefined,
+				animation: undefined,
+				leftDx:0,
+				widthDx:0,
+				newLineLeft:0
 			};
 		},
 
@@ -68,7 +74,7 @@
 				type: Number,
 				default: 0
 			},
-			backgroundColorClass :{
+			backgroundColorClass: {
 				type: String,
 				default: ""
 			}
@@ -123,47 +129,85 @@
 					this.lineWidth = itemWidth
 				}
 			},
-			
-			changeDxF(){
+
+			changeDxF() {
 
 				this.scrollByDx(this.changeDx)
 			},
-			scrollByDx(dx){
-	
+			scrollByDx(dx) {
+				
+				
 				let f = dx > 0 ? 1 : -1
 				let zdx = dx * f
-				let d =parseInt( zdx / this.windowWidth);
+				let d = parseInt(zdx / this.windowWidth);
 				let tab = this.tabCur;
-				if(d >0  ){
+				if (d > 0) {
 					tab = tab + f * d
 					dx = (zdx - d * this.windowWidth) * f
 				}
-			
+
 				let nextTab = tab + f
-			
+
 				let item = this.tabItems[tab],
 					nextItem = this.tabItems[nextTab];
-				if(!item || !nextItem) return;
+				if (!item || !nextItem) return;
 				this.needTransition = true
 				let itemWidth = item.width || 0,
 					itemLeft = item.left || 0,
 					nextItemWidth = nextItem.width || 0,
 					nextItemLeft = nextItem.left || 0;
 				let adx = dx * f / this.windowWidth;
-				let lineWidth = itemWidth + (nextItemWidth - itemWidth) * adx 
-				let lineLeft = itemLeft + (nextItemLeft - itemLeft) * adx 				
+				let lineWidth = itemWidth + (nextItemWidth - itemWidth) * adx
+				let lineLeft = itemLeft + (nextItemLeft - itemLeft) * adx
+				
 				if (this.scroll) {
 					// 超出滚动的情况
 					// 保持滚动后当前 item '尽可能' 在屏幕中间
 					let scrollLeft = itemLeft - (this.windowWidth - itemWidth) / 2;
 					this.scrollLeft = scrollLeft
-					this.translateX = lineLeft
-					this.lineWidth = lineWidth
+					
+					this.animationFrame(lineLeft, lineWidth)
+					
 				} else {
-					this.translateX = lineLeft
-					this.lineWidth = lineWidth
+					
+					this.animationFrame(lineLeft, lineWidth)
 				}
 			},
+			animationFrame(lineLeft, lineWidth){
+				clearInterval(this.animation)  
+				
+				let time = new Date().getTime();
+				if(this.lastTime !== undefined){
+					let t = time - this.lastTime
+					let i = 1000 / 60;
+					if( t > i*2){
+						// 计算每帧运动距离
+						console.log(i)
+						
+						this.leftDx = (lineLeft - this.translateX) / i
+						this.widthDx = (lineWidth - this.lineWidth) / i						
+						//this.animation = window.requestAnimationFrame(this.loop);
+						this.animation = setInterval(() => {
+							this.translateX += this.leftDx
+							this.lineWidth += this.widthDx
+						}, i)
+						
+						
+					}else {
+						this.translateX = lineLeft
+						this.lineWidth = lineWidth
+					}
+					
+				}
+				this.lastTime = time
+			},
+			
+			loop(leftDx, widthDx){
+				
+				this.animation = window.requestAnimationFrame(this.loop);
+				
+			},
+			
 			/**
 			 * 监听数据变化, 如果改变重新初始化参数
 			 */
@@ -179,6 +223,8 @@
 			tabCurChange(newVal, oldVal) {
 				console.log('tabCurChange')
 				//this.scrollByIndex(newVal);
+				this.lastTime = undefined
+				clearInterval(this.animation)  
 				this.tabCur = newVal
 			},
 
@@ -196,10 +242,6 @@
 			 */
 			init() {
 				this.tabCur = this.tabCurIndex
-				const {
-					windowWidth
-				} = uni.getSystemInfoSync();
-				this.windowWidth = windowWidth || 375
 				uni.createSelectorQuery().selectAll(".tabs__item-child").boundingClientRect(res => {
 					this.scrolling = true
 					this.tabItems = res
@@ -208,7 +250,7 @@
 			}
 		}
 	};
-</script> 
-<style lang="scss"> 
-	@import "./index.scss"; 
+</script>
+<style lang="scss">
+	@import "./index.scss";
 </style>

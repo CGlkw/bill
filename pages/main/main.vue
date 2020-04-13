@@ -5,6 +5,7 @@
 			</tab>
 		</view>
 		
+		
 		<swiper :style="{height:clientHeight +'px'}" :current="categoryCur" :duration="duration" @animationfinish="animationFinish" @transition = "transition">
 			<swiper-item >
 				<scroll-view :style="{height:clientHeight +'px'}" :scroll-y="true">
@@ -29,11 +30,16 @@
 <script >
 	import tab from '@/components/tab/index.vue';
 	import billMain from './bill-main/bill-main.vue'
+	import { Swiper as KSwiper, SwiperSlide } from 'vue-awesome-swiper'
+	import 'swiper/css/swiper.css'
+
 	
 	export default {
 		components:{
 			tab,
-			billMain
+			billMain,
+			KSwiper,
+			SwiperSlide
 		},
 		data() {
 			return {
@@ -44,16 +50,19 @@
 				changeDx:0,
 				clientHeight:500,
 				tabSize:80,
+				swiperOptions: {
+				  autoplay: 3000,
+				        speed: 1000,
+				  // Some Swiper option/callback...
+				}
 			}
 		},
+		watch:{
+
+		},
 		created() {
-			const {
-				windowHeight,
-				windowWidth
-			} = uni.getSystemInfoSync();
-			let s =Math.floor( ( windowWidth / 750 ) * this.tabSize );
-			console.log('tableSize:'+ s)
-			this.clientHeight = windowHeight - this.CustomBar - s
+			let s =Math.floor( ( this.windowWidth / 750 ) * this.tabSize );
+			this.clientHeight = this.windowHeight - this.CustomBar - s
 		},
 		methods: {
 			// 顶部tab切换事件

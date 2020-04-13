@@ -1,10 +1,30 @@
 <script>
 	import Vue from 'vue'
+	import { openDB, closeDB ,initTable} from '@/db/sqlLite.js'
+	import { createBillTable, insertBillTable, selectAllBillTable } from '@/db/bill_table.js'
+	
+	
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			
+			// #ifdef APP-PLUS 
+			openDB().then(() =>{
+				
+				uni.showToast({
+					title: 'sqllite打开成功',
+					duration: 2000
+				});
+				initTable()
+			})
+			// #endif 
 			uni.getSystemInfo({
 				success: function(e) {
+					console.log(e)
+					
+					Vue.prototype.windowWidth = e.windowWidth
+					Vue.prototype.windowHeight = e.windowHeight
+					
 					// #ifndef MP
 					Vue.prototype.StatusBar = e.statusBarHeight;
 					
@@ -114,9 +134,15 @@
 		},
 		onShow: function() {
 			console.log('App Show')
+			// #ifdef APP-PLUS 
+			openDB()
+			// #endif
 		},
 		onHide: function() {
 			console.log('App Hide')
+			// #ifdef APP-PLUS 
+			closeDB()
+			// #endif
 		}
 	}
 </script>
