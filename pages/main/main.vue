@@ -6,7 +6,7 @@
 		</view>
 		
 		
-		<swiper :style="{height:clientHeight +'px'}" :current="categoryCur" :duration="duration" @animationfinish="animationFinish" @transition = "transition">
+		<swiper ref="kSwiper" :style="{height:clientHeight +'px'}" :current="categoryCur" :duration="duration" @animationfinish="animationFinish" @transition = "transition">
 			<swiper-item >
 				<scroll-view :style="{height:clientHeight +'px'}" :scroll-y="true">
 					<bill-main type="week"></bill-main>

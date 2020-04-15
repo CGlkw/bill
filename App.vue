@@ -10,7 +10,6 @@
 			
 			// #ifdef APP-PLUS 
 			openDB().then(() =>{
-				
 				uni.showToast({
 					title: 'sqllite打开成功',
 					duration: 2000
@@ -151,4 +150,5 @@
 	/*每个页面公共css */
 	@import "colorui/main.css";
 	@import "colorui/icon.css";
+	@import "@/static/css/k_bill_icon.css";
 </style>

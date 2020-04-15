@@ -1,6 +1,12 @@
 const db_path = '_doc/bill.db'
-const db_name = 'bill_dev'
+export const db_name = 'billdev'
 
+import { createBillTable } from './bill_table.js'
+
+export function initTable(){
+	createBillTable()
+	
+}
 
 // 打开数据库
 export function openDB(){

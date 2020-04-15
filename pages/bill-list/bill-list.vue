@@ -24,10 +24,10 @@
 					<view class="cu-list menu sm-border" >
 					
 						<view class="cu-item" v-for=" item in val" :key="item.id">
-							
+	
+							<i class="k-bill-iconfont list_icon" :class="item.icon"></i>
 							<view class="content padding-tb-sm">
-								<view>
-									<text class="cuIcon-clothesfill text-blue margin-right-xs"></text> {{ item.type }}</view>
+								<view> {{ item.type }}</view>
 								<view class="text-gray text-sm">
 									<text class="margin-right-xs"></text> {{ item.remark }}</view>
 								<view class="text-gray text-sm">
@@ -139,5 +139,9 @@
 		background-color: #FFF;
 		margin-left: 30px;
 	}
-} 
+}
+ .list_icon{
+	 font-size: 60rpx;
+	 margin-right: 20rpx;
+ }
 </style>

@@ -2,18 +2,27 @@ import billType from '@/jsondata/billType.json'
 import bill from '@/jsondata/bill.json'
 import moment from 'moment'
 
+import { insertBillTable,selectAllBillTable } from '@/db/bill_table.js'
+import { selectAllBillTypeTable,insertBillTypeTable } from '@/db/bill_type_table.js'
 
 
 export function getBillType(){
+	// #ifdef APP-PLUS 
+	return selectAllBillTypeTable()
+	// #endif
+	
+	// #ifndef APP-PLUS 
 	return new Promise((reslove,reject) => {
 		reslove(billType)
 	})
+	// #endif
 }
 
 export function getBillChartDate(data){
 	return new Promise((reslove,reject) => {
 		let startTime = data.startTime;
 		let endTime = data.endTime;
+		// #ifndef APP-PLUS 
 		let startDate = startTime !== undefined ? moment(startTime, "YYYY-MM-DD") : undefined;
 		let endDate = endTime !== undefined ? moment(endTime, "YYYY-MM-DD") : undefined;
 		
@@ -33,6 +42,15 @@ export function getBillChartDate(data){
 		})
 		
 		reslove(result)
+		// #endif
+		
+		// #ifdef APP-PLUS 
+		selectAllBillTable({startDate: startTime, endDate: endTime}).then(data => {
+			reslove(data)
+		}).catch(e => {
+			reject(e)
+		})
+		// #endif
 	})
 }
 
@@ -40,6 +58,7 @@ export function getBill(data){
 	return new Promise((reslove,reject) => {
 		const pageNum = data.pageNum || 1
 		const pageSize = data.pageSize || 10
+		// #ifndef APP-PLUS 
 		const total = bill.length
 		
 		let start = (pageNum - 1) * pageSize
@@ -53,5 +72,15 @@ export function getBill(data){
 		})
 		
 		reslove(result)
+		// #endif
+		
+		// #ifdef APP-PLUS 
+		let start = (pageNum - 1) * pageSize
+		selectAllBillTable({start: start, size: pageSize}).then(data => {
+			reslove(data)
+		}).catch(e => {
+			reject(e)
+		})	
+		// #endif
 	})
 }
