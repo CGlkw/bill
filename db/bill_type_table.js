@@ -13,11 +13,11 @@ select * from bill_type
 `
 
 const init_data_sql = [
-	'insert into bill_type ( type_name, icon) values("购物","&#xe680;")',
-	'insert into bill_type ( type_name, icon) values("充值","&#xe692;")',
-	'insert into bill_type ( type_name, icon) values("餐饮","&#xe64f;")',
-	'insert into bill_type ( type_name, icon) values("旅行","&#xe645;")',
-	'insert into bill_type ( type_name, icon) values("交通","&#xe658;")'
+	'insert into bill_type ( type_name, icon) values("购物","icon-gouwu")',
+	'insert into bill_type ( type_name, icon) values("充值","icon-shouji")',
+	'insert into bill_type ( type_name, icon) values("餐饮","icon-canting")',
+	'insert into bill_type ( type_name, icon) values("旅行","icon-jingdian")',
+	'insert into bill_type ( type_name, icon) values("交通","icon-gongjiaoche")'
 ]
 
 export function createBillTypeTable(){
