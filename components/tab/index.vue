@@ -165,12 +165,11 @@
 					// 保持滚动后当前 item '尽可能' 在屏幕中间
 					let scrollLeft = itemLeft - (this.windowWidth - itemWidth) / 2;
 					this.scrollLeft = scrollLeft
-					
-					this.animationFrame(lineLeft, lineWidth)
-					
+					this.translateX = lineLeft
+					this.lineWidth = lineWidth							
 				} else {
-					
-					this.animationFrame(lineLeft, lineWidth)
+					this.translateX = lineLeft
+					this.lineWidth = lineWidth					
 				}
 			},
 			animationFrame(lineLeft, lineWidth){

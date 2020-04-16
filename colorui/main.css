@@ -1180,7 +1180,7 @@ button.cuIcon.lg {
 }
 
 .cu-list>.cu-item {
-	transition: all .6s ease-in-out 0s;
+	transition: all .3s ease-in-out 0s;
 	transform: translateX(0upx)
 }
 

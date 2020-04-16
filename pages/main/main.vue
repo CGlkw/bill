@@ -51,8 +51,8 @@
 				clientHeight:500,
 				tabSize:80,
 				swiperOptions: {
-				  autoplay: 3000,
-				        speed: 1000,
+					autoplay: 3000,
+					speed: 1000,
 				  // Some Swiper option/callback...
 				}
 			}

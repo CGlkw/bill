@@ -1,22 +1,22 @@
 [
 	{
 		"id":1,
-		"name":"网购"
+		"typeName":"网购"
 	},
 	{
 		"id":2,
-		"name":"充值"
+		"typeName":"充值"
 	},
 	{
 		"id":3,
-		"name":"餐费"
+		"typeName":"餐费"
 	},
 	{
 		"id":4,
-		"name":"购物"
+		"typeName":"购物"
 	},
 	{
 		"id":5,
-		"name":"缴费"
+		"typeName":"缴费"
 	}
 ]

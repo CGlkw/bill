@@ -41,18 +41,9 @@
 			</view>
 		</form>
 		
-		<view class="cu-modal" :class="modal?'show':''">
-			<view class="cu-dialog">
-				<view class="cu-bar bg-white justify-end">
-					<view class="content">Modal标题</view>
-					<view class="action" @tap="modal = false">
-						<text class="cuIcon-close text-red"></text>
-					</view>
-				</view>
-				<view class="padding-xl">
-					{{ modalContext }}
-				</view>
-			</view>
+		<view v-show="modal">
+			<view> log:</view>
+			<view v-for="item in logs" :key="item"> {{ item }}</view>
 		</view>
 	</view>
 </template>
@@ -67,14 +58,16 @@
 			return {
 				index: -1,
 				type:'',
+				typeId: undefined,
 				typeArray: [],
+				typeData:[],
 				date: moment(new Date()).format('YYYY-MM-DD'),
 				objectMultiArray: [],
 				textareaAValue: '',
 				money: undefined,
 				modal:false,
 				modalContext:'',
-				
+				logs:[]
 			};
 		},
 		created() {
@@ -83,20 +76,23 @@
 		methods: {
 			initTypePiker(){
 				getBillType().then(data => {
+					this.typeData = data
+					this.modal = true
+					this.logs.push('billType查询成功：' + JSON.stringify(data))
 					data.forEach((v, i) => {
-						this.typeArray.push(v.name)
+						this.typeArray.push(v.typeName)
 					})
-					this.type = data[0].name
+					this.type = data[0].typeName
+					this.typeId = data[0].id
 				})
-				console.log(this.typeArray)
 			},
 			formSubmit: function(e) {
-				console.log({type:this.type, remark:this.textareaAValue, time:this.date, money:this.money})
+				console.log({type:this.typeId, remark:this.textareaAValue, time:this.date, money:this.money})
 				
-				insertBillTable({type:this.type, remark:this.textareaAValue, time:this.date, money:this.money}).then(() =>{
+				insertBillTable({type:this.typeId, remark:this.textareaAValue, time:this.date, money:this.money}).then(() =>{
 					selectAllBillTable().then(data => {
 						this.modal = true
-						this.modalContext = JSON.stringify(data)
+						this.logs.push('bill添加成功：' + JSON.stringify(data))
 					})
 				})
 			},
@@ -104,7 +100,8 @@
 				console.log('清空数据')
 			},
 			MultiChange(e) {
-				this.type = this.typeArray[e.detail.value]
+				this.type = this.typeData[e.detail.value].typeName
+				this.typeId = this.typeData[e.detail.value].id
 			},
 			
 			textareaAInput(e) {

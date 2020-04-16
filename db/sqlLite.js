@@ -1,11 +1,14 @@
 const db_path = '_doc/bill.db'
-export const db_name = 'billdev'
+export const db_name = 'main'
 
 import { createBillTable } from './bill_table.js'
+import { createBillTypeTable } from './bill_type_table.js'
+
+
 
 export function initTable(){
 	createBillTable()
-	
+	createBillTypeTable()
 }
 
 // 打开数据库

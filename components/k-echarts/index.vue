@@ -53,16 +53,16 @@
 				const script = document.createElement('script')
 				// view 层的页面运行在 www 根目录，其相对路径相对于 www 计算
 				script.src = 'static/echarts.js'
-				script.id = '__echartsId'
 				script.onload = this.initEcharts.bind(this)
 				document.head.appendChild(script)
 
+				
 			}
 		},
 		methods: {
 			initEcharts() {
 				
-				this.kEcharts = echarts.init(document.getElementById(this.eid))
+				this.kEcharts = echarts.init(document.getElementById(this.eid),'shine')
 				// 观测更新的数据在 view 层可以直接访问到
 				this.kEcharts.setOption(this.option)
 			},

@@ -23,9 +23,10 @@
 					
 					<view class="cu-list menu sm-border" >
 					
-						<view class="cu-item" v-for=" item in val" :key="item.id">
+						<view class="cu-item" :class="modalName=='move-box-'+ index + key?'move-cur':''" v-for=" (item, index) in val" :key="item.id"
+						@touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index + key">
 	
-							<i class="k-bill-iconfont list_icon" :class="item.icon"></i>
+							<view class="k-bill-iconfont list_icon" :class="item.icon"></view>
 							<view class="content padding-tb-sm">
 								<view> {{ item.type }}</view>
 								<view class="text-gray text-sm">
@@ -35,6 +36,10 @@
 							</view>
 							<view class="action">
 								{{ item.money }}
+							</view>
+							<view class="move">
+								<view class="bg-grey">编辑</view>
+								<view class="bg-red" @tap="del(item.id, index, key)">删除</view>
 							</view>
 						</view>
 					</view>
@@ -49,7 +54,7 @@
 	import sticky from '@/components/sticky/sticky.vue'
 	import moment from 'moment'
 	import sPullScroll from '@/components/s-pull-scroll/index.vue';
-	import { getBillType, getBill } from '@/api/bill.js'
+	import { getBillType, getBill, delB } from '@/api/bill.js'
 	
 	export default {
 		components:{
@@ -63,7 +68,10 @@
 					
 				},
 				
-				billType:undefined
+				billType:undefined,
+				listTouchStart : 0,
+				listTouchDirection: null,
+				modalName: null,
 			}
 		},
 		onLoad () {
@@ -105,7 +113,12 @@
 			  }, 500);
 				
 			},
-
+			del(id, index, key){
+				delB(id).then(() => {
+					this.list[key].splice(index, 1)
+					this.$forceUpdate();
+				})
+			},
 			push(data){
 				const key = moment(data.time, "YYYY-MM-DD").format('YYYY-MM');
 				if(this.list[key] === undefined){
@@ -113,6 +126,25 @@
 				}
 				this.list[key].push(data)
 				
+			},
+			// ListTouch触摸开始
+			ListTouchStart(e) {
+				this.listTouchStart = e.touches[0].pageX
+			},
+			
+			// ListTouch计算方向
+			ListTouchMove(e) {
+				this.listTouchDirection = e.touches[0].pageX - this.listTouchStart > 0 ? 'right' : 'left'
+			},
+			
+			// ListTouch计算滚动
+			ListTouchEnd(e) {
+				if (this.listTouchDirection == 'left') {
+					this.modalName = e.currentTarget.dataset.target
+				} else {
+					this.modalName = null
+				}
+				this.listTouchDirection = null
 			}
 		}
 	}

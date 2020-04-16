@@ -59,6 +59,37 @@ export function insertBillTable(data){
 	// #endif
 }
 
+export function delBill(id){
+	let delSql = `delete from bill where id = ${id}`
+		
+	return new Promise((reslove,reject) => {
+		// #ifdef APP-PLUS
+		plus.sqlite.executeSql({
+			name: db_name,
+			sql: delSql,
+			success: function(e){
+				uni.showToast({
+					title: '删除成功',
+					duration: 2000
+				});
+				reslove(e)
+			},
+			fail: function(e){
+				uni.showToast({
+					title: '删除失败',
+					duration: 2000
+				});
+				reject(e)
+			}
+		});
+		// #endif
+		
+		// #ifndef APP-PLUS
+			reslove()
+		// #endif
+	})	
+}
+
 export function selectAllBillTable(data){
 	
 	let sql;
@@ -67,13 +98,13 @@ export function selectAllBillTable(data){
 	}else {
 		let selectSql = ''
 		if(data.startDate){
-			selectSql = selectSql + ' and b.time >= ' + data.startDate
+			selectSql = selectSql + ` and b.time >= '${data.startDate}'`
 		}
 		if(data.endDate){
-			selectSql = selectSql + ' and b.time < ' + data.endDate
+			selectSql = selectSql + ` and b.time <= '${data.endDate}'`
 		}
 		if(data.type){
-			selectSql = selectSql + ' and b.type = ' + data.type
+			selectSql = selectSql + ` and b.type = '${data.type}'` 
 		}
 		if(data.size){
 			selectSql = selectSql + ' limit ' + data.size

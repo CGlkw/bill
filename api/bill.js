@@ -2,7 +2,7 @@ import billType from '@/jsondata/billType.json'
 import bill from '@/jsondata/bill.json'
 import moment from 'moment'
 
-import { insertBillTable,selectAllBillTable } from '@/db/bill_table.js'
+import { insertBillTable,selectAllBillTable, delBill } from '@/db/bill_table.js'
 import { selectAllBillTypeTable,insertBillTypeTable } from '@/db/bill_type_table.js'
 
 
@@ -16,6 +16,10 @@ export function getBillType(){
 		reslove(billType)
 	})
 	// #endif
+}
+
+export function delB(id){
+	return delBill(id)
 }
 
 export function getBillChartDate(data){
