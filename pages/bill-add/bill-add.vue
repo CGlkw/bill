@@ -4,47 +4,31 @@
 			<block slot="backText">返回</block>
 			<block slot="content">记账</block>
 		</cu-custom>
-		<form @submit="formSubmit" @reset="formReset">
-			<view class="cu-form-group">
-				<view class="title">日期</view>
-				<picker v-model="date" mode="date" :value="date" @change="show">
-					<view class="picker" >
-						{{date}}
-					</view>
-				</picker>
-			</view>
-			<!-- #ifndef MP-ALIPAY -->
-			<view class="cu-form-group">
-				<view class="title">类型</view>
-				<picker mode="selector" @change="MultiChange"  :value="0" :range="typeArray">
-					<view class="picker">
-						{{ type }}
-					</view>
-				</picker>
-			</view>
-			<view class="cu-form-group">
-				<view class="title">金额</view>
-				<input placeholder="金额" type="number" :value="money" @input="ehangeMoney"></input>
-			</view>
-			<!-- #endif -->
-			
 		
-			<!-- !!!!! placeholder 在ios表现有偏移 建议使用 第一种样式 -->
-			<view class="cu-form-group">
-				<view class="title">备注</view>
-				
-				<textarea maxlength="-1"  @input="textareaAInput" v-model="textareaAValue" placeholder="多行文本输入框"></textarea>
-			</view>
-			<view class="uni-btn-v">
-				<button form-type="submit" class="cu-btn bg-blue margin-tb-sm lg">Submit</button>
-				<button type="default" form-type="reset">Reset</button>
-			</view>
-		</form>
+		<van-grid class="bill-type-grid"  :column-num="4">
+		  <van-grid-item v-for="(item, index) in typeData" :key="item.id" :class="selectIndex === index? 'bill-type-grid-click': ''" @click="chooseType(item.id, index)" >
+			  <template slot="icon">
+				  <view class="k-bill-iconfont bill-type-icon" :class="item.icon"></view>
+			  </template>
+			  <template slot="text">
+			  		<view class="bill-type-text">
+						{{item.typeName}}
+					</view>
+			  </template>
+		  </van-grid-item>
+		</van-grid>
+		<van-popup 
+			:lock-scroll="false" 
+			:close-on-click-overlay="false" 
+			:overlay="false" 
+			position="bottom" 
+			v-model="billInputShow"
 		
-		<view v-show="modal">
-			<view> log:</view>
-			<view v-for="item in logs" :key="item"> {{ item }}</view>
-		</view>
+			>
+			<bill-input />
+		</van-popup>
+		
+		
 	</view>
 </template>
 
@@ -52,10 +36,16 @@
 	import moment from 'moment'
 	import { getBillType, getBill } from '@/api/bill.js'
 	import { insertBillTable, selectAllBillTable } from '@/db/bill_table.js'
+	import BillInput from './components/BillInput.vue'
+	
 	
 	export default {
+		components:{
+			BillInput
+		},
 		data() {
 			return {
+				billInputShow:false,
 				index: -1,
 				type:'',
 				typeId: undefined,
@@ -67,13 +57,18 @@
 				money: undefined,
 				modal:false,
 				modalContext:'',
-				logs:[]
+				logs:[],
+				selectIndex: undefined
 			};
 		},
 		created() {
 			this.initTypePiker()
 		},
 		methods: {
+			chooseType(id, index){
+				this.selectIndex = index
+				this.billInputShow = true
+			},
 			initTypePiker(){
 				getBillType().then(data => {
 					this.typeData = data
@@ -119,8 +114,24 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	.cu-form-group .title {
 		min-width: calc(2em + 15px);
 	}
+	.bill-type-grid{
+		color: $uni-text-color;
+		.bill-type-icon{
+			font-size: 60rpx;
+			
+		}
+		.bill-type-text{
+			font-size: 10rpx;
+			
+		}
+		
+	}
+	.bill-type-grid-click{
+		color: #007AFF;
+	}
+	
 </style>

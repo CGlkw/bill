@@ -30,16 +30,11 @@
 <script >
 	import tab from '@/components/tab/index.vue';
 	import billMain from './bill-main/bill-main.vue'
-	import { Swiper as KSwiper, SwiperSlide } from 'vue-awesome-swiper'
-	import 'swiper/css/swiper.css'
-
 	
 	export default {
 		components:{
 			tab,
-			billMain,
-			KSwiper,
-			SwiperSlide
+			billMain
 		},
 		data() {
 			return {

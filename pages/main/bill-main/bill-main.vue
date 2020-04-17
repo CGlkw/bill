@@ -1,8 +1,9 @@
 <template>
 	<view>
-		<k-echarts :option="option" ></k-echarts>
-		<button @click="changeOption">更新数据</button>
-		
+		<van-pull-refresh v-model="refreshing" @refresh="onRefresh" :style="{height:clientHeight +'px'}">
+			<k-echarts :option="option" ></k-echarts>
+			<button @click="changeOption">更新数据</button>
+		</van-pull-refresh>
 	</view>
 </template>
 
@@ -23,6 +24,7 @@
 		},
 		data() {
 			return {
+				refreshing:false,
 				option:{
 					title: {
 						text: '消费',
@@ -62,21 +64,32 @@
 			}
 		},
 		created() {
-			switch(this.type){
-				case 'week':
-					this.days = 7
-					break;
-				case 'month':
-					this.days = 30
-					break;
-				case 'year':
-					this.days = 365
-					break;
-			}
+			this.initDays()
 			this.init() 
 			
 		},
 		methods: {
+			initDays(){
+				switch(this.type){
+					case 'week':
+						this.days = 7
+						break;
+					case 'month':
+						this.days = 30
+						break;
+					case 'year':
+						this.days = 365
+						break;
+				}
+			},
+			onRefresh(){
+				
+				setTimeout(()=> {
+					this.initDays()
+					this.init()
+					this.refreshing = false
+				},500)
+			},
 			changeOption() {
 				this.days++
 				this.init()

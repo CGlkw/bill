@@ -1,22 +1,27 @@
 [
 	{
 		"id":1,
-		"typeName":"网购"
+		"typeName":"网购",
+		"icon":"icon-gouwu"
 	},
 	{
 		"id":2,
-		"typeName":"充值"
+		"typeName":"充值",
+		"icon":"icon-shouji"
 	},
 	{
 		"id":3,
-		"typeName":"餐费"
+		"typeName":"餐费",
+		"icon":"icon-canting"
 	},
 	{
 		"id":4,
-		"typeName":"购物"
+		"typeName":"购物",
+		"icon":"icon-gouwu"
 	},
 	{
 		"id":5,
-		"typeName":"缴费"
+		"typeName":"缴费",
+		"icon":"icon-shouji"
 	}
 ]

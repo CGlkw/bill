@@ -4,12 +4,13 @@
 			<block slot="backText">返回</block>
 			<block slot="content">账单</block>
 		</cu-custom>
+		
+		
 		<view>
 			<s-pull-scroll :header-height='CustomBar' ref="pullScroll" :pullDown="pullDown" :pullUp="loadData">
-				<view class="bill-list" v-for=" (val, key) in list" :key="key">
+				<view  class="bill-list" v-for=" (val, key) in list" :key="key">
 						
 					<view class="bill-date" style="height: 40px;">
-					
 						<picker mode="date" fields="month" :value="key" >
 							<button class="cu-btn sm round line-gray" >
 								<view class="picker" >
@@ -18,29 +19,35 @@
 							<text class="cuIcon-unfold"></text>
 							</button>
 						</picker>
-					
 					</view>
 					
 					<view class="cu-list menu sm-border" >
-					
-						<view class="cu-item" :class="modalName=='move-box-'+ index + key?'move-cur':''" v-for=" (item, index) in val" :key="item.id"
-						@touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index + key">
-	
-							<view class="k-bill-iconfont list_icon" :class="item.icon"></view>
-							<view class="content padding-tb-sm">
-								<view> {{ item.type }}</view>
-								<view class="text-gray text-sm">
-									<text class="margin-right-xs"></text> {{ item.remark }}</view>
-								<view class="text-gray text-sm">
-									<text class="margin-right-xs"></text> {{ item.time }}</view>
-							</view>
-							<view class="action">
-								{{ item.money }}
-							</view>
-							<view class="move">
-								<view class="bg-grey">编辑</view>
-								<view class="bg-red" @tap="del(item.id, index, key)">删除</view>
-							</view>
+						<view  class="bill-list" v-for=" (v, k) in val" :key="k">
+							
+							<van-cell-group :border="true" >
+								<template slot="title">									
+									<view class="bill-date-time">
+										<view class="title">
+											{{ k }}
+										</view>
+										<view class="right">
+											支出:
+										</view>
+									</view>
+								</template>
+								<van-swipe-cell class="" v-for=" (item, index) in v" :key="item.id">
+									<van-cell :title="item.type" :value="item.money" >
+										<template slot = "icon">
+											<view class="k-bill-iconfont list_icon" :class="item.icon"></view>
+										</template>
+									</van-cell>
+									
+									<template slot = "right">
+										<van-button square type="primary" text="编辑" />
+										<van-button square type="danger" @tap="del(item.id, index, key)" text="删除" />
+									</template>
+								</van-swipe-cell>
+							</van-cell-group>
 						</view>
 					</view>
 					
@@ -121,31 +128,18 @@
 			},
 			push(data){
 				const key = moment(data.time, "YYYY-MM-DD").format('YYYY-MM');
+				const time_key = moment(data.time, "YYYY-MM-DD").format('MM月DD日 dddd');
+				
 				if(this.list[key] === undefined){
-					this.list[key] = []
+					this.list[key] = {}
 				}
-				this.list[key].push(data)
+				if(this.list[key][time_key] === undefined){
+					this.list[key][time_key] = []
+				}
+				this.list[key][time_key].push(data)
 				
 			},
-			// ListTouch触摸开始
-			ListTouchStart(e) {
-				this.listTouchStart = e.touches[0].pageX
-			},
-			
-			// ListTouch计算方向
-			ListTouchMove(e) {
-				this.listTouchDirection = e.touches[0].pageX - this.listTouchStart > 0 ? 'right' : 'left'
-			},
-			
-			// ListTouch计算滚动
-			ListTouchEnd(e) {
-				if (this.listTouchDirection == 'left') {
-					this.modalName = e.currentTarget.dataset.target
-				} else {
-					this.modalName = null
-				}
-				this.listTouchDirection = null
-			}
+		
 		}
 	}
 </script>
@@ -157,7 +151,7 @@
 	z-index: 80;
 	background-color: #dfdfdf;
 	padding-top: 8px;
-	.bill-picker{
+	.bill-picker {
 		margin-left: 30px;
 		width: 70px;
 		height: 20px;
@@ -172,8 +166,18 @@
 		margin-left: 30px;
 	}
 }
+.bill-date-time{
+	font-size: 20rpx;
+	.title{
+		display: inline-block;
+	}
+	.right{
+		display: inline-block;
+		float: right;
+	}
+}
  .list_icon{
-	 font-size: 60rpx;
+	 font-size: 50rpx;
 	 margin-right: 20rpx;
  }
 </style>

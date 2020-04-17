@@ -106,6 +106,9 @@ export function selectAllBillTable(data){
 		if(data.type){
 			selectSql = selectSql + ` and b.type = '${data.type}'` 
 		}
+		
+		selectSql = selectSql + ' ORDER BY b.time desc'
+		
 		if(data.size){
 			selectSql = selectSql + ' limit ' + data.size
 		}
@@ -124,7 +127,6 @@ export function selectAllBillTable(data){
 			sql = select_bill_table
 		}
 	}
-	
 	console.log("查询bill sql:" + sql)
 	
 	

@@ -43,6 +43,25 @@ export function closeDB(){
 				reject(e)
 			}
 		});
-	})
+	})	
+}
+
+export function tableIsExit(tableName){
+	let sql = `SELECT count(*) as count from sqlite_master where type='table' and name='${tableName}';`
+	return new Promise((reslove,reject) => {
+		plus.sqlite.executeSql({
+			name: db_name,
+			sql: sql,
+			success: function(e){
+				console.log('select table is exit success');
+				reslove(e)
+			},
+			fail: function(e){
+				console.log('select table is exit fail , '+JSON.stringify(e));
+				reject(e)
+			}
+		});
+	})	
+	
 	
 }
