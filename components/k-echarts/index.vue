@@ -36,7 +36,7 @@
 </script>
 
 <script module="echarts" lang="renderjs">
-	import { createHash } from '@/util/HashUtil.js'
+	import { createHash } from '@/utils/HashUtil.js'
 	
 	export default {
 
@@ -96,4 +96,5 @@
 		width: 100%;
 		height: 300px;
 	}
+
 </style>

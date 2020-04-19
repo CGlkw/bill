@@ -1,9 +1,7 @@
 <template>
 	<view>
-		<van-pull-refresh v-model="refreshing" @refresh="onRefresh" :style="{height:clientHeight +'px'}">
 			<k-echarts :option="option" ></k-echarts>
 			<button @click="changeOption">更新数据</button>
-		</van-pull-refresh>
 	</view>
 </template>
 

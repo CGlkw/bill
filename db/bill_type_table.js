@@ -14,6 +14,7 @@ create table if not exists ${table_name}(
 )
 `
 
+
 const droup_bill_type_table =
 `
 DROP TABLE ${table_name}

@@ -151,6 +151,5 @@
 	@import "colorui/main.css";
 	@import "colorui/icon.css";
 	@import "@/static/css/k_bill_icon.css";
-	@import 'vant/lib/index.css';
 	
 </style>

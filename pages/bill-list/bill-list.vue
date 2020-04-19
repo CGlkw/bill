@@ -25,7 +25,7 @@
 						<view  class="bill-list" v-for=" (v, k) in val" :key="k">
 							
 							<van-cell-group :border="true" >
-								<template slot="title">									
+								<view slot="title">									
 									<view class="bill-date-time">
 										<view class="title">
 											{{ k }}
@@ -34,18 +34,18 @@
 											支出:
 										</view>
 									</view>
-								</template>
-								<van-swipe-cell class="" v-for=" (item, index) in v" :key="item.id">
+								</view>
+								<van-swipe-cell right-width=" 120 " class="" v-for=" (item, index) in v" :key="item.id">
 									<van-cell :title="item.type" :value="item.money" >
-										<template slot = "icon">
+										<view slot = "icon">
 											<view class="k-bill-iconfont list_icon" :class="item.icon"></view>
-										</template>
+										</view>
 									</van-cell>
 									
-									<template slot = "right">
-										<van-button square type="primary" text="编辑" />
-										<van-button square type="danger" @tap="del(item.id, index, key)" text="删除" />
-									</template>
+									<view slot = "right" >
+										<van-button square type="primary" >编辑</van-button>
+										<van-button square type="danger" @tap="del(item.id, index, key, k)" >删除</van-button>
+									</view>
 								</van-swipe-cell>
 							</van-cell-group>
 						</view>
@@ -105,7 +105,7 @@
 				  this.listCount = 0
 				}
 				getBill({pageNum:pullScroll.page}).then((data) => {
-					
+					console.log(JSON.stringify(data))
 					if(data.length === 0){
 						pullScroll.finish();
 					}else{
@@ -120,9 +120,9 @@
 			  }, 500);
 				
 			},
-			del(id, index, key){
+			del(id, index, key, k){
 				delB(id).then(() => {
-					this.list[key].splice(index, 1)
+					this.list[key][k].splice(index, 1)
 					this.$forceUpdate();
 				})
 			},

@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import App from './App'
-import Vant from 'vant';
 
-Vue.use(Vant);
+// VANT 全局组件
+import '@/utils/vantRegister';
+
 Vue.config.productionTip = false
 
 App.mpType = 'app'
 import cuCustom from './colorui/components/cu-custom.vue'
 Vue.component('cu-custom',cuCustom)
+
 const app = new Vue({
     ...App
 })
