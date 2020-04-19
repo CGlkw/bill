@@ -4,9 +4,14 @@
 			<block slot="backText">返回</block>
 			<block slot="content">记账</block>
 		</cu-custom>
-		<scroll-view :style="{height:clientHeight +'px'}" :scroll-y="true">
+		<scroll-view 
+			:style="{height:clientHeight +'px'}" 
+			:scroll-y="true"
+			:scroll-with-animation="true"
+			:scroll-top="scrollTop"
+		>
 			<van-grid class="bill-type-grid"  :column-num="4">
-			  <van-grid-item v-for="(item, index) in typeData" :key="item.id" :class="selectIndex === index? 'bill-type-grid-click': ''" @click="chooseType(item.id, index)" >
+			  <van-grid-item v-for="(item, index) in typeData" :key="item.id" :class="selectIndex === index? 'bill-type-grid-click': ''" @click="chooseType(item.id, index, $event)" >
 				  <view slot="icon">
 					  <view class="k-bill-iconfont bill-type-icon" :class="item.icon"></view>
 				  </view>
@@ -61,7 +66,9 @@
 				logs:[],
 				selectIndex: undefined,
 				height:132,
-				keyboardHeight:undefined
+				keyboardHeight:0,
+				totalHeight:undefined,
+				selectHeight:undefined
 			};
 		},
 		computed:{
@@ -70,25 +77,45 @@
 					return this.height + this.keyboardHeight
 				},
 				set(val){
-					console.log(val)
-					//this.height = val
+	
 				}
+			},
+			clientHeight:function(){
+				console.log(this.popupHeight)
+				let h = this.windowHeight - this.CustomBar - this.popupHeight -50
+				console.log(h)
+				return h
+			},
+			scrollTop:function(){
+				if(this.clientHeight < this.selectHeight + 50){
+					let h =  ((this.selectHeight - this.clientHeight) / this.totalHeight) * this.clientHeight + 50
+					console.log(h)
+					return h
+				}
+				return 0
 			}
+		},
+		watch:{
+			
 		},
 		mounted() {
 			uni.onKeyboardHeightChange(res => {
-				console.log("键盘高度："+res.height)
 			  this.keyboardHeight = res.height
-			})
+			}),
+			this.totalHeight = Math.ceil(this.typeData.length/4) * (this.windowWidth / 4)
+			console.log(this.totalHeight)
 		},
 		created() {
 			this.initTypePiker()
 		},
 		methods: {
-			chooseType(id, index){
+			chooseType(id, index, event){
 				this.selectIndex = index
 				this.typeId = id
 				this.billInputShow = true
+				this.selectHeight = Math.ceil(index / 4) * (this.windowWidth / 4)
+				console.log(this.selectHeight)
+				console.log(event)
 			},
 			initTypePiker(){
 				getBillType().then(data => {
