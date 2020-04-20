@@ -1,5 +1,5 @@
 <template>
-<uni-shadow-root class="vant-swipe-cell-index"><view class="van-swipe-cell" data-key="cell" @click.stop.prevent="onClick" @touchstart="startDrag" @touchmove.stop.prevent="catchMove ? 'noop' : ''" @touchmove.capture="onDrag" @touchend="endDrag" @touchcancel="endDrag">
+<uni-shadow-root class="vant-swipe-cell-index"><view class="van-swipe-cell" data-key="cell" @click.stop.prevent="onClick" @touchstart="startDrag"  @touchmove.capture="onDrag" @touchend="endDrag" @touchcancel="endDrag">
   <view :style="wrapperStyle">
     <view v-if="leftWidth" class="van-swipe-cell__left" data-key="left" @click.stop.prevent="onClick">
       <slot name="left"></slot>
@@ -109,17 +109,22 @@ VantComponent({
         },
         noop() { },
         onDrag(event) {
+			
             if (this.data.disabled) {
                 return;
             }
             this.touchMove(event);
             if (this.direction !== 'horizontal') {
+				console.log(this.catchMove)
+				ARRAY.filter(item => item !== this).forEach(item => item.close());
+				
                 return;
             }
             this.dragging = true;
             ARRAY.filter(item => item !== this).forEach(item => item.close());
             this.setData({ catchMove: true });
             this.swipeMove(this.startOffset + this.deltaX);
+			console.log(this.catchMove)
         },
         endDrag() {
             if (this.data.disabled) {

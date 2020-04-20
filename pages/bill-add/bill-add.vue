@@ -5,13 +5,15 @@
 			<block slot="content">记账</block>
 		</cu-custom>
 		<scroll-view 
+			ref = "billScorll"
 			:style="{height:clientHeight +'px'}" 
 			:scroll-y="true"
 			:scroll-with-animation="true"
 			:scroll-top="scrollTop"
+			@scroll="scroll"
 		>
 			<van-grid class="bill-type-grid"  :column-num="4">
-			  <van-grid-item v-for="(item, index) in typeData" :key="item.id" :class="selectIndex === index? 'bill-type-grid-click': ''" @click="chooseType(item.id, index, $event)" >
+			  <van-grid-item ref="gridItems" v-for="(item, index) in typeData" :key="item.id" :class="selectIndex === index? 'bill-type-grid-click': ''" @click="chooseType(item.id, index, $event)" >
 				  <view slot="icon">
 					  <view class="k-bill-iconfont bill-type-icon" :class="item.icon"></view>
 				  </view>
@@ -68,54 +70,89 @@
 				height:132,
 				keyboardHeight:0,
 				totalHeight:undefined,
-				selectHeight:undefined
+				rowHeight:0,
+				selectHeight:undefined,
+				scrollHNow:0,
+				scrollTop:0
 			};
 		},
 		computed:{
 			popupHeight:{
 				get(){
-					return this.height + this.keyboardHeight
+					if(this.billInputShow){
+						return this.height + this.keyboardHeight
+					}
+					return 0
 				},
 				set(val){
-	
+					console.log('popupHeight set:' + val)
+				}
+			},
+			popupHeightAll:{
+				get(){
+					if(this.billInputShow){
+						return this.popupHeight + 50
+					}
+					return 0
+				},
+				set(val){
+					console.log('popupHeight set:' + val)
 				}
 			},
 			clientHeight:function(){
-				console.log(this.popupHeight)
-				let h = this.windowHeight - this.CustomBar - this.popupHeight -50
-				console.log(h)
+				let h = this.windowHeight - this.CustomBar - this.popupHeightAll
 				return h
-			},
+			}/* ,
 			scrollTop:function(){
-				if(this.clientHeight < this.selectHeight + 50){
-					let h =  ((this.selectHeight - this.clientHeight) / this.totalHeight) * this.clientHeight + 50
-					console.log(h)
+				console.log(`clientHeight:${this.clientHeight} , selectHeight:${this.selectHeight}`)
+				if(this.clientHeight < this.selectHeight){
+					let temp = this.scrollHNow.valueOf()
+					let h =  this.selectHeight - this.clientHeight+temp
+					console.log('scrollTop:' +h)
 					return h
 				}
-				return 0
-			}
+				return this.scrollHNow 
+			} */
 		},
 		watch:{
-			
+			typeData:function(){
+				this.$nextTick(() => {
+				  this.totalHeight = this.$refs.billScorll.$children[0].$children[0].$el.scrollHeight
+				  this.rowHeight = this.totalHeight / Math.ceil(this.typeData.length/4)
+				})
+			},
+			clientHeight:function(){
+				console.log(`clientHeight:${this.clientHeight} , selectHeight:${this.selectHeight}`)
+				if(this.clientHeight < this.selectHeight){
+					let temp = this.scrollHNow.valueOf()
+					let h =  this.selectHeight - this.clientHeight+temp
+					console.log('scrollTop:' +h)
+					this.scrollTop = h
+				}else{
+					this.scrollTop = this.scrollHNow 
+					console.log('scrollTop:' +this.scrollTop)
+					
+				}
+			}
 		},
 		mounted() {
 			uni.onKeyboardHeightChange(res => {
 			  this.keyboardHeight = res.height
-			}),
-			this.totalHeight = Math.ceil(this.typeData.length/4) * (this.windowWidth / 4)
-			console.log(this.totalHeight)
+			})
+			 
 		},
 		created() {
 			this.initTypePiker()
+			
 		},
 		methods: {
 			chooseType(id, index, event){
 				this.selectIndex = index
 				this.typeId = id
+				this.selectHeight = Math.ceil(index / 4) * this.rowHeight - this.scrollHNow
+				console.log('selectHeight:' +this.selectHeight)
 				this.billInputShow = true
-				this.selectHeight = Math.ceil(index / 4) * (this.windowWidth / 4)
-				console.log(this.selectHeight)
-				console.log(event)
+				
 			},
 			initTypePiker(){
 				getBillType().then(data => {
@@ -154,6 +191,11 @@
 			},
 			keyboardChange(h){
 				this.popupHeight = 'height:' + h + 'px'
+			},
+			scroll(e){
+				this.scrollHNow =  e.detail.scrollTop
+				console.log('scrollHNow:' +this.scrollHNow)
+				
 			}
 		}
 	}
